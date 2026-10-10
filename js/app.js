@@ -252,6 +252,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize standard lucide icons
     lucide.createIcons();
     
+    // Initialize Supabase Cloud Sync UI
+    if (typeof initSupabaseUI === "function") {
+        initSupabaseUI();
+    }
+    
     // Core Navigation / SPA Router
     const navLinks = document.querySelectorAll(".nav-link");
     const sections = document.querySelectorAll(".module-section");
@@ -700,3 +705,117 @@ function renderNotifications() {
         list.appendChild(div);
     });
 }
+
+// Supabase Cloud Sync UI Controller
+function initSupabaseUI() {
+    const cloudBtn = document.getElementById("cloud-settings-btn");
+    const cloudModal = document.getElementById("supabase-modal");
+    const cloudDot = document.getElementById("cloud-status-dot");
+    const modalDot = document.getElementById("modal-status-dot");
+    const statusTitle = document.getElementById("cloud-status-title");
+    const statusDesc = document.getElementById("cloud-status-desc");
+    const urlInput = document.getElementById("sb-url");
+    const keyInput = document.getElementById("sb-key");
+    const configForm = document.getElementById("supabase-config-form");
+    const testBtn = document.getElementById("sb-test-btn");
+    const pullBtn = document.getElementById("sb-pull-btn");
+    const pushBtn = document.getElementById("sb-push-btn");
+    const disconnectBtn = document.getElementById("sb-disconnect-btn");
+
+    if (!cloudBtn || !cloudModal || !window.EcoDB) return;
+
+    function updateBadge() {
+        const isConnected = window.EcoDB.isCloudConnected();
+        const cfg = window.EcoDB.getConfig();
+
+        if (urlInput) urlInput.value = cfg.url || "";
+        if (keyInput) keyInput.value = cfg.key || "";
+
+        if (isConnected) {
+            cloudDot.className = "cloud-dot connected";
+            if (modalDot) modalDot.className = "status-dot connected";
+            if (statusTitle) statusTitle.textContent = "Connected to Supabase Cloud Database";
+            if (statusDesc) statusDesc.textContent = `Project URL: ${cfg.url}`;
+            document.getElementById("cloud-pill-label").textContent = "Cloud Active";
+        } else {
+            cloudDot.className = "cloud-dot disconnected";
+            if (modalDot) modalDot.className = "status-dot disconnected";
+            if (statusTitle) statusTitle.textContent = "Local Storage Mode (Offline / Hybrid)";
+            if (statusDesc) statusDesc.textContent = "Data is currently stored locally. Enter Supabase credentials to enable multi-device sync.";
+            document.getElementById("cloud-pill-label").textContent = "Connect Cloud";
+        }
+    }
+
+    updateBadge();
+
+    cloudBtn.addEventListener("click", () => {
+        updateBadge();
+        cloudModal.classList.add("active");
+        lucide.createIcons();
+    });
+
+    if (configForm) {
+        configForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const u = urlInput.value.trim();
+            const k = keyInput.value.trim();
+            window.EcoDB.saveConfig(u, k);
+        });
+    }
+
+    if (testBtn) {
+        testBtn.addEventListener("click", async () => {
+            const u = urlInput.value.trim();
+            const k = keyInput.value.trim();
+            testBtn.disabled = true;
+            testBtn.innerHTML = '<i data-lucide="loader"></i> Testing...';
+            lucide.createIcons();
+            const res = await window.EcoDB.testConnection(u, k);
+            testBtn.disabled = false;
+            testBtn.innerHTML = '<i data-lucide="activity"></i> Test Connection';
+            lucide.createIcons();
+            alert(res.message);
+        });
+    }
+
+    if (pullBtn) {
+        pullBtn.addEventListener("click", async () => {
+            if (!confirm("This will pull data from Supabase Cloud and refresh your current view. Continue?")) return;
+            pullBtn.disabled = true;
+            pullBtn.innerHTML = '<i data-lucide="loader"></i> Pulling...';
+            lucide.createIcons();
+            const res = await window.EcoDB.syncFromCloud();
+            pullBtn.disabled = false;
+            pullBtn.innerHTML = '<i data-lucide="cloud-download"></i> Pull from Cloud';
+            lucide.createIcons();
+            alert(res.message);
+            if (res.success) {
+                renderUI();
+                cloudModal.classList.remove("active");
+            }
+        });
+    }
+
+    if (pushBtn) {
+        pushBtn.addEventListener("click", async () => {
+            if (!confirm("Upload all local records, innovations, and profile to Supabase Cloud?")) return;
+            pushBtn.disabled = true;
+            pushBtn.innerHTML = '<i data-lucide="loader"></i> Uploading...';
+            lucide.createIcons();
+            const res = await window.EcoDB.syncToCloud();
+            pushBtn.disabled = false;
+            pushBtn.innerHTML = '<i data-lucide="cloud-upload"></i> Push to Cloud';
+            lucide.createIcons();
+            alert(res.message);
+        });
+    }
+
+    if (disconnectBtn) {
+        disconnectBtn.addEventListener("click", () => {
+            if (confirm("Disconnect Supabase cloud? Your data will remain safely in LocalStorage.")) {
+                window.EcoDB.disconnectCloud();
+            }
+        });
+    }
+}
+

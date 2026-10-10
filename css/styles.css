@@ -2356,3 +2356,81 @@ body {
         color: #6b7280;
     }
 }
+
+/* ==========================================================================
+   Supabase Cloud Database & Cloud Pill UI
+   ========================================================================== */
+.cloud-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--panel-color);
+    border: 1px solid var(--border-color);
+    padding: 6px 14px;
+    border-radius: 9999px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cloud-pill:hover {
+    border-color: var(--primary-color);
+    background: rgba(16, 185, 129, 0.08);
+}
+
+.cloud-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #9ca3af;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.cloud-dot.connected {
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+}
+
+.cloud-dot.disconnected {
+    background: #f59e0b;
+}
+
+.cloud-status-banner {
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+}
+
+.status-indicator-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #9ca3af;
+}
+
+.status-dot.connected {
+    background: #10b981;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.status-dot.disconnected {
+    background: #f59e0b;
+}
+
+.max-width-large {
+    max-width: 620px;
+    width: 92%;
+}
+
