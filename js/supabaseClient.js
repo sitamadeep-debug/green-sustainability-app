@@ -3,13 +3,16 @@
    ========================================================================== */
 
 (function () {
+    const DEFAULT_SUPABASE_URL = "https://bzsmoaguijxwgodqbppn.supabase.co";
+    const DEFAULT_SUPABASE_ANON_KEY = "sb_publishable_peQAdPdvlscELD-ffocQMQ_XmIxnGNV";
+
     function normalizeUrl(url) {
         if (!url) return '';
         return url.trim().replace(/\/rest\/v1\/?$/, '').replace(/\/+$/, '');
     }
 
-    const savedUrl = normalizeUrl(localStorage.getItem('ecosustain_supabase_url') || '');
-    const savedKey = (localStorage.getItem('ecosustain_supabase_key') || '').trim();
+    const savedUrl = normalizeUrl(localStorage.getItem('ecosustain_supabase_url') || DEFAULT_SUPABASE_URL);
+    const savedKey = (localStorage.getItem('ecosustain_supabase_key') || DEFAULT_SUPABASE_ANON_KEY).trim();
 
     let client = null;
 
@@ -35,8 +38,8 @@
 
         getConfig() {
             return {
-                url: localStorage.getItem('ecosustain_supabase_url') || '',
-                key: localStorage.getItem('ecosustain_supabase_key') || ''
+                url: localStorage.getItem('ecosustain_supabase_url') || DEFAULT_SUPABASE_URL,
+                key: localStorage.getItem('ecosustain_supabase_key') || DEFAULT_SUPABASE_ANON_KEY
             };
         },
 
@@ -138,7 +141,7 @@
                     }));
                 }
 
-                window.EcoState.saveState();
+                window.EcoState.saveState(true);
                 return { success: true, message: 'Data successfully synced from Supabase Cloud!' };
             } catch (err) {
                 console.error('Error syncing from cloud:', err);

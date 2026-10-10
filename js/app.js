@@ -16,7 +16,7 @@ window.EcoState = {
     notifications: [],
     
     // Seed and Save functions
-    saveState() {
+    saveState(skipCloud = false) {
         localStorage.setItem("ecosustain_state", JSON.stringify({
             profile: this.profile,
             records: this.records,
@@ -27,6 +27,11 @@ window.EcoState = {
         
         // Trigger event for other modules to know state has changed
         window.dispatchEvent(new Event("stateUpdated"));
+
+        // Sync to Supabase Cloud in background
+        if (!skipCloud && window.EcoDB && window.EcoDB.isCloudConnected()) {
+            window.EcoDB.syncToCloud().catch(err => console.warn("Supabase background sync:", err));
+        }
     },
     
     loadState() {
@@ -248,6 +253,16 @@ window.calculateEmissions = function(rec) {
 document.addEventListener("DOMContentLoaded", () => {
     // Load local storage or default seed data
     window.EcoState.loadState();
+    
+    // Auto-sync from Supabase Cloud
+    if (window.EcoDB && window.EcoDB.isCloudConnected()) {
+        window.EcoDB.syncFromCloud().then(res => {
+            if (res.success && typeof renderUI === "function") {
+                renderUI();
+                console.log("☁️ [EcoSustain] Real-time data synchronized with Supabase");
+            }
+        });
+    }
     
     // Initialize standard lucide icons
     lucide.createIcons();
