@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSustain | MSME Sustainability Platform</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- CSS Stylesheet -->
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-area">
+                    <div class="logo-icon">
+                        <i data-lucide="leaf"></i>
+                    </div>
+                    <span class="logo-text">EcoSustain</span>
+                </div>
+                <button class="mobile-close" id="mobile-close-btn">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="profile-card">
+                <div class="profile-avatar">
+                    <i data-lucide="store"></i>
+                </div>
+                <div class="profile-info">
+                    <h4 class="profile-name" id="display-company-name">GlowOrganic Cafe</h4>
+                    <span class="profile-sector" id="display-company-sector">Culinary (F&B)</span>
+                </div>
+                <button class="edit-profile-btn" id="edit-profile-btn" title="Edit Profile">
+                    <i data-lucide="edit-3"></i>
+                </button>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="#" class="nav-link active" data-target="dashboard">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-link" data-target="data-input">
+                    <i data-lucide="file-input"></i>
+                    <span>Green Data Input</span>
+                </a>
+                <a href="#" class="nav-link" data-target="innovations">
+                    <i data-lucide="lightbulb"></i>
+                    <span>Innovation Tracker</span>
+                </a>
+                <a href="#" class="nav-link" data-target="recommendations">
+                    <i data-lucide="sparkles"></i>
+                    <span>Smart Recommendations</span>
+                </a>
+                <a href="#" class="nav-link" data-target="targets">
+                    <i data-lucide="target"></i>
+                    <span>Eco Targets</span>
+                </a>
+                <a href="#" class="nav-link" data-target="benchmarking">
+                    <i data-lucide="scale"></i>
+                    <span>Benchmarking</span>
+                </a>
+                <a href="#" class="nav-link" data-target="education">
+                    <i data-lucide="graduation-cap"></i>
+                    <span>Eco Academy</span>
+                </a>
+                <a href="#" class="nav-link" data-target="reports">
+                    <i data-lucide="file-bar-chart"></i>
+                    <span>Reports & Audit</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="theme-toggle-container">
+                    <span>Dark Mode</span>
+                    <button class="theme-toggle-btn" id="theme-toggle">
+                        <i data-lucide="moon" class="dark-icon"></i>
+                        <i data-lucide="sun" class="light-icon"></i>
+                    </button>
+                </div>
+                <div class="footer-credit">
+                    <p>EcoSustain v1.0</p>
+                    <p>Empowering Green MSMEs</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header bar -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="hamburger-menu" id="hamburger-btn">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <h1 class="header-title" id="page-title">Sustainability Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <!-- Global savings highlight -->
+                    <div class="savings-pill">
+                        <i data-lucide="leaf"></i>
+                        <span>CO₂ Saved: <strong id="global-co2-saved">0.0 kg</strong></span>
+                    </div>
+
+                    <!-- Level Badge -->
+                    <div class="level-badge" id="level-badge" title="Earn points by using green inputs, quizzes, and innovations!">
+                        <i data-lucide="award"></i>
+                        <span id="level-name">Green Rookie</span>
+                    </div>
+
+                    <!-- Notification Button -->
+                    <div class="notification-wrapper">
+                        <button class="header-icon-btn" id="notification-btn">
+                            <i data-lucide="bell"></i>
+                            <span class="notification-badge hidden" id="notif-badge"></span>
+                        </button>
+                        <div class="notification-dropdown" id="notification-dropdown">
+                            <div class="notif-header">
+                                <h3>Notifications</h3>
+                                <button id="clear-notif-btn">Clear All</button>
+                            </div>
+                            <div class="notif-list" id="notif-list">
+                                <div class="notif-empty">No new notifications</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Module -->
+            <section id="dashboard" class="module-section active">
+                <div class="dashboard-grid">
+                    <!-- Column 1: Core indices -->
+                    <div class="score-card glass-panel">
+                        <div class="card-header">
+                            <h3>Sustainability Index</h3>
+                            <span class="tooltip-trigger" title="Calculated from energy, water, waste efficiency, quiz completion and green innovations."><i data-lucide="help-circle"></i></span>
+                        </div>
+                        <div class="gauge-container">
+                            <svg class="progress-ring" width="200" height="200">
+                                <circle class="progress-ring-circle-bg" stroke="rgba(255,255,255,0.05)" stroke-width="16" fill="transparent" r="80" cx="100" cy="100" />
+                                <circle class="progress-ring-circle" stroke="var(--primary-color)" stroke-width="16" fill="transparent" r="80" cx="100" cy="100" id="sustainability-gauge" />
+                            </svg>
+                            <div class="gauge-value">
+                                <span id="sustainability-score">0</span>
+                                <span class="gauge-label">/100</span>
+                            </div>
+                        </div>
+                        <div class="score-breakdown">
+                            <p class="score-status" id="score-status">Calculating...</p>
+                            <span class="score-subtext" id="score-feedback">Log inputs & implement green innovations to boost your score!</span>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Mini Quick-metrics -->
+                    <div class="metrics-grid">
+                        <div class="metric-mini-card glass-panel">
+                            <div class="mini-card-icon energy-bg">
+                                <i data-lucide="zap"></i>
+                            </div>
+                            <div class="mini-card-info">
+                                <span class="mini-label">Electricity Usage</span>
+                                <h3 class="mini-value" id="dash-electricity-val">0 kWh</h3>
+                                <span class="mini-change" id="dash-electricity-change"><i data-lucide="minus"></i> No previous data</span>
+                            </div>
+                        </div>
+                        <div class="metric-mini-card glass-panel">
+                            <div class="mini-card-icon water-bg">
+                                <i data-lucide="droplet"></i>
+                            </div>
+                            <div class="mini-card-info">
+                                <span class="mini-label">Water Usage</span>
+                                <h3 class="mini-value" id="dash-water-val">0 m³</h3>
+                                <span class="mini-change" id="dash-water-change"><i data-lucide="minus"></i> No previous data</span>
+                            </div>
+                        </div>
+                        <div class="metric-mini-card glass-panel">
+                            <div class="mini-card-icon waste-bg">
+                                <i data-lucide="trash-2"></i>
+                            </div>
+                            <div class="mini-card-info">
+                                <span class="mini-label">Waste Generated</span>
+                                <h3 class="mini-value" id="dash-waste-val">0 kg</h3>
+                                <span class="mini-change" id="dash-waste-change"><i data-lucide="minus"></i> No previous data</span>
+                            </div>
+                        </div>
+                        <div class="metric-mini-card glass-panel">
+                            <div class="mini-card-icon carbon-bg">
+                                <i data-lucide="cloud-drizzle"></i>
+                            </div>
+                            <div class="mini-card-info">
+                                <span class="mini-label">Carbon Footprint</span>
+                                <h3 class="mini-value" id="dash-carbon-val">0 kg CO₂e</h3>
+                                <span class="mini-change" id="dash-carbon-change"><i data-lucide="minus"></i> No previous data</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Charts -->
+                <div class="charts-row">
+                    <div class="chart-container glass-panel lg-col">
+                        <div class="chart-header">
+                            <h3>Resource Consumption Trends</h3>
+                            <div class="chart-legends">
+                                <span class="legend-item"><span class="legend-color energy-bg"></span> Electricity (kWh)</span>
+                                <span class="legend-item"><span class="legend-color water-bg"></span> Water (m³)</span>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="consumptionTrendsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container glass-panel sm-col">
+                        <div class="chart-header">
+                            <h3>Carbon Footprint Breakdown</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="carbonBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-row mt-4">
+                    <div class="chart-container glass-panel md-col">
+                        <div class="chart-header">
+                            <h3>Waste Streams Analysis</h3>
+                            <div class="chart-legends">
+                                <span class="legend-item"><span class="legend-color success-bg"></span> Recycled</span>
+                                <span class="legend-item"><span class="legend-color danger-bg"></span> Landfill</span>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="wasteAnalysisChart"></canvas>
+                        </div>
+                    </div>
+                    <!-- Quick actions or progress -->
+                    <div class="glass-panel md-col dashboard-summary">
+                        <h3>Quick Summary</h3>
+                        <div class="summary-list">
+                            <div class="summary-item">
+                                <div class="summary-dot primary-bg"></div>
+                                <div class="summary-content">
+                                    <strong>Active Green Innovations</strong>
+                                    <p id="dash-active-innovations">0 active projects reducing impact</p>
+                                </div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-dot warning-bg"></div>
+                                <div class="summary-content">
+                                    <strong>Pending Targets</strong>
+                                    <p id="dash-pending-targets">0 conservation goals set for this month</p>
+                                </div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-dot info-bg"></div>
+                                <div class="summary-content">
+                                    <strong>Eco Academy Progress</strong>
+                                    <p id="dash-academy-points">0 quiz points earned</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="summary-actions">
+                            <button class="btn btn-primary btn-full" onclick="document.querySelector('.nav-link[data-target=\'data-input\']').click()">
+                                <i data-lucide="plus-circle"></i> Log Month Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Green Data Input Module -->
+            <section id="data-input" class="module-section">
+                <div class="section-layout">
+                    <!-- Left: Form -->
+                    <div class="form-container glass-panel">
+                        <div class="panel-header">
+                            <h2>Monthly Data Input</h2>
+                            <p>Fill in resource consumption and waste details. Standard carbon emissions conversions apply automatically.</p>
+                        </div>
+                        <form id="green-data-form">
+                            <!-- Period Selection -->
+                            <div class="form-grid cols-2">
+                                <div class="form-group">
+                                    <label for="input-year">Year</label>
+                                    <select id="input-year" required>
+                                        <option value="2026" selected>2026</option>
+                                        <option value="2025">2025</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="input-month">Month</label>
+                                    <select id="input-month" required>
+                                        <option value="January">January</option>
+                                        <option value="February">February</option>
+                                        <option value="March">March</option>
+                                        <option value="April">April</option>
+                                        <option value="May" selected>May</option>
+                                        <option value="June">June</option>
+                                        <option value="July">July</option>
+                                        <option value="August">August</option>
+                                        <option value="September">September</option>
+                                        <option value="October">October</option>
+                                        <option value="November">November</option>
+                                        <option value="December">December</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <hr class="form-divider">
+
+                            <!-- Resource Consumptions -->
+                            <h3><i data-lucide="zap"></i> Resource Consumption</h3>
+                            <div class="form-grid cols-2">
+                                <div class="form-group">
+                                    <label for="input-electricity">Electricity (kWh)</label>
+                                    <input type="number" id="input-electricity" min="0" placeholder="e.g. 350" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="input-electricity-cost">Electricity Cost (IDR)</label>
+                                    <input type="number" id="input-electricity-cost" min="0" placeholder="e.g. 500000" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="input-water">Water (m³)</label>
+                                    <input type="number" id="input-water" min="0" step="0.1" placeholder="e.g. 15" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="input-water-cost">Water Cost (IDR)</label>
+                                    <input type="number" id="input-water-cost" min="0" placeholder="e.g. 120000" required>
+                                </div>
+                            </div>
+
+                            <hr class="form-divider">
+
+                            <!-- Materials & Packaging -->
+                            <h3><i data-lucide="package"></i> Materials Used (Packaging / Raw)</h3>
+                            <div class="form-grid cols-3">
+                                <div class="form-group">
+                                    <label for="input-plastic">Single-use Plastic (kg)</label>
+                                    <input type="number" id="input-plastic" min="0" step="0.1" placeholder="e.g. 12.5" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="input-paper">Paper/Cardboard (kg)</label>
+                                    <input type="number" id="input-paper" min="0" step="0.1" placeholder="e.g. 45" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="input-organic-materials">Organic Sourced (kg)</label>
+                                    <input type="number" id="input-organic-materials" min="0" step="0.1" placeholder="e.g. 120" required>
+                                </div>
+                            </div>
+
+                            <hr class="form-divider">
+
+                            <!-- Waste Management -->
+                            <h3><i data-lucide="trash-2"></i> Waste Generated</h3>
+                            <div class="form-grid cols-3">
+                                <div class="form-group">
+                                    <label for="input-waste-organic">Organic Waste (kg)</label>
+                                    <input type="number" id="input-waste-organic" min="0" step="0.1" placeholder="e.g. 80" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="input-waste-inorganic">Inorganic (Landfill) (kg)</label>
+                                    <input type="number" id="input-waste-inorganic" min="0" step="0.1" placeholder="e.g. 25" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="input-waste-recycled">Recycled / Upcycled (kg)</label>
+                                    <input type="number" id="input-waste-recycled" min="0" step="0.1" placeholder="e.g. 40" required>
+                                </div>
+                            </div>
+
+                            <hr class="form-divider">
+
+                            <!-- Fuel & Logistics -->
+                            <h3><i data-lucide="truck"></i> Logistics & Fuel</h3>
+                            <div class="form-grid cols-2">
+                                <div class="form-group">
+                                    <label for="input-fuel-type">Primary Delivery Vehicle Fuel</label>
+                                    <select id="input-fuel-type">
+                                        <option value="Petrol">Gasoline / Petrol</option>
+                                        <option value="Diesel">Diesel</option>
+                                        <option value="None">None (Electric/None)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="input-fuel-qty">Fuel Consumed (Liters)</label>
+                                    <input type="number" id="input-fuel-qty" min="0" step="0.1" placeholder="e.g. 30" required>
+                                </div>
+                            </div>
+
+                            <div class="form-actions mt-4">
+                                <button type="reset" class="btn btn-secondary">Clear Fields</button>
+                                <button type="submit" class="btn btn-primary"><i data-lucide="save"></i> Save Input</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Right: History log -->
+                    <div class="history-container glass-panel">
+                        <div class="panel-header">
+                            <h2>Input History Logs</h2>
+                            <div class="history-search">
+                                <input type="text" id="history-search-input" placeholder="Search by month or year...">
+                                <i data-lucide="search"></i>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Period</th>
+                                        <th>Electricity</th>
+                                        <th>Water</th>
+                                        <th>Waste Total</th>
+                                        <th>Emissions</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="history-table-body">
+                                    <!-- Dynamic rows loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Green Innovation Tracker Module -->
+            <section id="innovations" class="module-section">
+                <div class="innovation-intro-row">
+                    <div class="intro-stats-grid">
+                        <div class="stat-box glass-panel">
+                            <span class="stat-title">Active Innovations</span>
+                            <h2 class="stat-number" id="active-inno-count">0</h2>
+                        </div>
+                        <div class="stat-box glass-panel">
+                            <span class="stat-title">Total Incurred Cost</span>
+                            <h2 class="stat-number text-accent" id="active-inno-cost">Rp 0</h2>
+                        </div>
+                        <div class="stat-box glass-panel">
+                            <span class="stat-title">Est. Yearly Carbon Savings</span>
+                            <h2 class="stat-number text-success" id="active-inno-savings">0.0 kg</h2>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="add-innovation-btn">
+                        <i data-lucide="plus"></i> Add Green Innovation
+                    </button>
+                </div>
+
+                <div class="pipeline-container">
+                    <!-- Category: Product -->
+                    <div class="pipeline-column glass-panel">
+                        <div class="pipeline-header product-header">
+                            <h3><i data-lucide="package-open"></i> Product Innovations</h3>
+                            <span class="pipeline-count" id="count-product">0</span>
+                        </div>
+                        <div class="pipeline-cards" id="pipeline-product">
+                            <!-- Dynamic cards -->
+                        </div>
+                    </div>
+
+                    <!-- Category: Process -->
+                    <div class="pipeline-column glass-panel">
+                        <div class="pipeline-header process-header">
+                            <h3><i data-lucide="refresh-cw"></i> Process & Operations</h3>
+                            <span class="pipeline-count" id="count-process">0</span>
+                        </div>
+                        <div class="pipeline-cards" id="pipeline-process">
+                            <!-- Dynamic cards -->
+                        </div>
+                    </div>
+
+                    <!-- Category: Material -->
+                    <div class="pipeline-column glass-panel">
+                        <div class="pipeline-header material-header">
+                            <h3><i data-lucide="layers"></i> Sustainable Materials</h3>
+                            <span class="pipeline-count" id="count-material">0</span>
+                        </div>
+                        <div class="pipeline-cards" id="pipeline-material">
+                            <!-- Dynamic cards -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Smart Recommendations Module -->
+            <section id="recommendations" class="module-section">
+                <div class="recommendations-container">
+                    <div class="glass-panel recs-intro">
+                        <div class="recs-intro-content">
+                            <h2>Smart Eco-Recommendations</h2>
+                            <p>Our rule engine dynamically evaluates your energy consumption, waste streams, and logistics metrics against sector standards. Implement these concrete steps to improve your sustainability profile and save costs.</p>
+                        </div>
+                        <div class="recs-badge">
+                            <i data-lucide="sparkles"></i>
+                        </div>
+                    </div>
+
+                    <!-- Active Recommendations Grid -->
+                    <div class="recs-grid" id="recs-grid">
+                        <!-- Dynamic items from recommendation engine -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Eco Targets & Alerts Module -->
+            <section id="targets" class="module-section">
+                <div class="targets-layout">
+                    <!-- Left: Create Target & Target List -->
+                    <div class="targets-main glass-panel">
+                        <div class="panel-header">
+                            <h2>Active Eco Targets</h2>
+                            <button class="btn btn-primary" id="create-target-btn">
+                                <i data-lucide="plus"></i> Define New Target
+                            </button>
+                        </div>
+
+                        <div class="target-cards-list" id="targets-list-container">
+                            <!-- Dynamic Targets -->
+                        </div>
+                    </div>
+
+                    <!-- Right: Alerts Log & Reminders -->
+                    <div class="targets-sidebar">
+                        <div class="glass-panel alert-logs-card">
+                            <div class="panel-header border-bottom">
+                                <h3><i data-lucide="alert-triangle"></i> Resource & Threshold Alerts</h3>
+                            </div>
+                            <div class="alerts-log-list" id="alerts-log-list">
+                                <!-- Dynamic Alerts -->
+                            </div>
+                        </div>
+
+                        <div class="glass-panel reminders-card mt-4">
+                            <div class="panel-header border-bottom">
+                                <h3><i data-lucide="calendar"></i> Next Log Reminders</h3>
+                            </div>
+                            <div class="reminders-list">
+                                <div class="reminder-item">
+                                    <div class="reminder-icon green-icon">
+                                        <i data-lucide="check-circle2"></i>
+                                    </div>
+                                    <div class="reminder-info">
+                                        <strong>May 2026 Entries</strong>
+                                        <p class="text-success">Data logged successfully!</p>
+                                    </div>
+                                </div>
+                                <div class="reminder-item">
+                                    <div class="reminder-icon warning-icon">
+                                        <i data-lucide="clock"></i>
+                                    </div>
+                                    <div class="reminder-info">
+                                        <strong>June 2026 Entries Due</strong>
+                                        <p>Log entries due in <span id="days-until-due">9</span> days (June 1st, 2026)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sector Benchmarking Module -->
+            <section id="benchmarking" class="module-section">
+                <div class="benchmarking-layout">
+                    <!-- Radar comparison chart -->
+                    <div class="glass-panel radar-card">
+                        <div class="panel-header">
+                            <h2>How You Compare (5 Eco-Pillars)</h2>
+                            <p>Comparing your MSME performance against the sector average of <strong id="benchmarking-sector-display">Culinary</strong>.</p>
+                        </div>
+                        <div class="radar-chart-wrapper">
+                            <canvas id="radarBenchmarkChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Side stats: Eco rank & recommendations -->
+                    <div class="benchmarking-details">
+                        <!-- Rank Widget -->
+                        <div class="glass-panel rank-widget">
+                            <div class="rank-badge-icon">
+                                <i data-lucide="trending-up"></i>
+                            </div>
+                            <div class="rank-info">
+                                <span>Your Sector Standing</span>
+                                <h2 id="sector-rank-text">Top 15%</h2>
+                                <p id="sector-rank-desc">Outstanding! You outperform 85% of Culinary businesses in water conservation.</p>
+                            </div>
+                        </div>
+
+                        <!-- Bar chart showing literal averages -->
+                        <div class="glass-panel bar-comparison-card mt-4">
+                            <div class="panel-header">
+                                <h3>Monthly Carbon Emissions vs Sector Average</h3>
+                            </div>
+                            <div class="bar-chart-wrapper">
+                                <canvas id="barBenchmarkChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Eco Academy Module -->
+            <section id="education" class="module-section">
+                <div class="academy-layout">
+                    <!-- Tab Navigation -->
+                    <div class="academy-tabs">
+                        <button class="academy-tab-btn active" data-tab="lessons">
+                            <i data-lucide="book-open"></i> Green Knowledge Library
+                        </button>
+                        <button class="academy-tab-btn" data-tab="quiz">
+                            <i data-lucide="help-circle"></i> Interactive Sustainability Quiz
+                        </button>
+                    </div>
+
+                    <!-- Library Content Tab -->
+                    <div class="academy-tab-content active" id="academy-lessons-tab">
+                        <div class="lessons-grid">
+                            <!-- Article Card 1 -->
+                            <div class="article-card glass-panel">
+                                <div class="article-img-placeholder energy-bg">
+                                    <i data-lucide="zap"></i>
+                                </div>
+                                <div class="article-body">
+                                    <span class="article-tag">ENERGY EFFICIENCY</span>
+                                    <h3>Quick Wins for Lowering MSME Power Bills</h3>
+                                    <p>Discover easy procedures to reduce power consumption by up to 20% by swapping to LEDs, using smart timer sockets, and auditing standby equipment energy drains.</p>
+                                    <button class="btn-text" data-lesson="1">Read Guide <i data-lucide="arrow-right"></i></button>
+                                </div>
+                            </div>
+                            <!-- Article Card 2 -->
+                            <div class="article-card glass-panel">
+                                <div class="article-img-placeholder waste-bg">
+                                    <i data-lucide="refresh-cw"></i>
+                                </div>
+                                <div class="article-body">
+                                    <span class="article-tag">CIRCULAR ECONOMY</span>
+                                    <h3>Zero Waste and the Circular Economy for Small Businesses</h3>
+                                    <p>Learn how to redesign your product packaging, create take-back circular programs, and convert organic raw material wastes into valuable community compost resources.</p>
+                                    <button class="btn-text" data-lesson="2">Read Guide <i data-lucide="arrow-right"></i></button>
+                                </div>
+                            </div>
+                            <!-- Article Card 3 -->
+                            <div class="article-card glass-panel">
+                                <div class="article-img-placeholder water-bg">
+                                    <i data-lucide="droplet"></i>
+                                </div>
+                                <div class="article-body">
+                                    <span class="article-tag">WATER CONSERVATION</span>
+                                    <h3>Practical Rainwater Harvesting and Greywater Reuse</h3>
+                                    <p>A step-by-step primer on building water storage collectors, recycling cooling systems, and treating wastewater safely for sanitation or agricultural watering requirements.</p>
+                                    <button class="btn-text" data-lesson="3">Read Guide <i data-lucide="arrow-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Tab -->
+                    <div class="academy-tab-content" id="academy-quiz-tab">
+                        <div class="quiz-container glass-panel">
+                            <!-- Quiz Welcome / Intro -->
+                            <div class="quiz-intro-screen" id="quiz-intro-screen">
+                                <div class="quiz-badge-icon">
+                                    <i data-lucide="award"></i>
+                                </div>
+                                <h2>Eco-Sustain Challenger Quiz</h2>
+                                <p>Test your knowledge on circular economy, energy efficiency, and waste reduction. Score 80% or higher to unlock the prestigious <strong>Green Scholar Badge</strong> (+15 Sustainability Points)!</p>
+                                <button class="btn btn-primary" id="start-quiz-btn">Start 5-Question Challenge</button>
+                            </div>
+
+                            <!-- Active Quiz Question -->
+                            <div class="quiz-play-screen hidden" id="quiz-play-screen">
+                                <div class="quiz-header">
+                                    <span class="quiz-progress-label">Question <span id="quiz-current-num">1</span> of 5</span>
+                                    <div class="quiz-progress-bar">
+                                        <div class="quiz-progress-fill" id="quiz-progress-fill" style="width: 20%"></div>
+                                    </div>
+                                </div>
+                                <h3 class="quiz-question-text" id="quiz-question-text">Loading question text...</h3>
+                                <div class="quiz-options-list" id="quiz-options-list">
+                                    <!-- Dynamic Options buttons -->
+                                </div>
+                                <div class="quiz-footer mt-4">
+                                    <button class="btn btn-secondary hidden" id="next-question-btn">Next Question <i data-lucide="arrow-right"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Quiz Result Screen -->
+                            <div class="quiz-result-screen hidden" id="quiz-result-screen">
+                                <div class="quiz-result-icon" id="quiz-result-icon">
+                                    <!-- Dynamic check or award icon -->
+                                </div>
+                                <h2 id="quiz-result-title">Congratulations!</h2>
+                                <p id="quiz-result-message">You scored 5 out of 5! That is a perfect result.</p>
+                                <div class="quiz-points-added">
+                                    <i data-lucide="leaf"></i>
+                                    <span>Sustainability Index Bonus: <strong class="text-success" id="quiz-points-val">+15 Points</strong></span>
+                                </div>
+                                <div class="quiz-actions mt-4">
+                                    <button class="btn btn-secondary" id="restart-quiz-btn">Try Again</button>
+                                    <button class="btn btn-primary" onclick="document.querySelector('.nav-link[data-target=\'dashboard\']').click()">Back to Dashboard</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports & Audit Module -->
+            <section id="reports" class="module-section">
+                <div class="reports-container">
+                    <div class="reports-header-card glass-panel">
+                        <div class="header-card-info">
+                            <h2>Generate Audit & Sustainability Reports</h2>
+                            <p>Download structured data for CSR declarations, green certifications, bank loans, or internal compliance audits. Choose formats matching your documentation requirements.</p>
+                        </div>
+                        <div class="report-icons-group">
+                            <i data-lucide="file-text"></i>
+                            <i data-lucide="sheet"></i>
+                        </div>
+                    </div>
+
+                    <div class="reports-builder-layout">
+                        <!-- Left: Report options -->
+                        <div class="glass-panel builder-options-card">
+                            <h3>Configure Report Settings</h3>
+                            <form id="report-builder-form">
+                                <div class="form-group">
+                                    <label for="report-period-type">Reporting Period</label>
+                                    <select id="report-period-type">
+                                        <option value="YTD">Year to Date (2026)</option>
+                                        <option value="Q1">Q1 2026 (Jan - Mar)</option>
+                                        <option value="Custom">All Logged Records</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Sections to Include</label>
+                                    <div class="checkbox-group">
+                                        <label class="custom-checkbox">
+                                            <input type="checkbox" id="inc-consumption" checked>
+                                            <span>Resource Consumption Statistics</span>
+                                        </label>
+                                        <label class="custom-checkbox">
+                                            <input type="checkbox" id="inc-emissions" checked>
+                                            <span>Carbon Footprint Analysis</span>
+                                        </label>
+                                        <label class="custom-checkbox">
+                                            <input type="checkbox" id="inc-innovations" checked>
+                                            <span>Green Innovation Pipeline</span>
+                                        </label>
+                                        <label class="custom-checkbox">
+                                            <input type="checkbox" id="inc-benchmarking" checked>
+                                            <span>Comparative Industry Standing</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="report-actions-panel mt-4">
+                                    <button type="button" class="btn btn-secondary btn-full mb-2" id="export-csv-btn">
+                                        <i data-lucide="table"></i> Export Monthly Data (CSV)
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-full" id="export-pdf-btn">
+                                        <i data-lucide="printer"></i> Print Audit-Ready PDF Report
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Right: Document Preview -->
+                        <div class="glass-panel report-preview-card">
+                            <h3>Report Preview</h3>
+                            <div class="document-preview-frame" id="report-preview-frame">
+                                <div class="preview-doc-header">
+                                    <div class="preview-logo">
+                                        <i data-lucide="leaf"></i>
+                                        <span>EcoSustain Report</span>
+                                    </div>
+                                    <span class="preview-date">Generated: 2026-05-21</span>
+                                </div>
+                                <hr class="preview-line">
+                                <div class="preview-doc-body">
+                                    <h2 class="preview-doc-title">CORPORATE GREEN AUDIT REPORT</h2>
+                                    <div class="preview-meta-row">
+                                        <div>
+                                            <strong>Business Entity:</strong>
+                                            <p id="preview-company-name">GlowOrganic Cafe</p>
+                                        </div>
+                                        <div>
+                                            <strong>Sector Classification:</strong>
+                                            <p id="preview-company-sector">Culinary (F&B)</p>
+                                        </div>
+                                    </div>
+                                    <div class="preview-content-box">
+                                        <h4>Executive Summary</h4>
+                                        <p>This document verifies resource consumption, greenhouse gas contributions, and green pipeline measures initiated by the entity for the specified reporting timeframe. Computed carbon factors align with GHG corporate protocol specifications.</p>
+                                    </div>
+                                    <div class="preview-statistics">
+                                        <div class="preview-stat-item">
+                                            <span>Cumulative Energy Logged</span>
+                                            <strong id="preview-electricity-stat">1,240 kWh</strong>
+                                        </div>
+                                        <div class="preview-stat-item">
+                                            <span>Emissions Avoided</span>
+                                            <strong id="preview-co2-stat" class="text-success">112 kg CO₂e</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals Section -->
+
+    <!-- Edit Profile Modal -->
+    <div class="modal-overlay" id="profile-modal">
+        <div class="modal-box glass-panel">
+            <div class="modal-header">
+                <h2>Edit Business Profile</h2>
+                <button class="modal-close" onclick="document.getElementById('profile-modal').classList.remove('active')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-profile-form">
+                    <div class="form-group">
+                        <label for="profile-company-input">MSME Business Name</label>
+                        <input type="text" id="profile-company-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-sector-input">Industry Sector</label>
+                        <select id="profile-sector-input" required>
+                            <option value="Culinary (F&B)">Culinary (F&B)</option>
+                            <option value="Fashion & Textile">Fashion & Textile</option>
+                            <option value="Crafts & Furniture">Crafts & Furniture</option>
+                            <option value="Retail & Services">Retail & Services</option>
+                            <option value="Micro Manufacturing">Micro Manufacturing</option>
+                        </select>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('profile-modal').classList.remove('active')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Innovation Modal -->
+    <div class="modal-overlay" id="innovation-modal">
+        <div class="modal-box glass-panel">
+            <div class="modal-header">
+                <h2>Add Green Innovation Record</h2>
+                <button class="modal-close" onclick="document.getElementById('innovation-modal').classList.remove('active')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="add-innovation-form">
+                    <div class="form-group">
+                        <label for="inno-title">Innovation Title</label>
+                        <input type="text" id="inno-title" placeholder="e.g. Biodegradable cassava packaging cups" required>
+                    </div>
+                    <div class="form-grid cols-2">
+                        <div class="form-group">
+                            <label for="inno-type">Innovation Category</label>
+                            <select id="inno-type" required>
+                                <option value="Product">Product Innovation</option>
+                                <option value="Process">Process & Operations</option>
+                                <option value="Material">Sustainable Materials</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="inno-cost">Implementation Cost (IDR)</label>
+                            <input type="number" id="inno-cost" placeholder="e.g. 1500000" min="0" required>
+                        </div>
+                    </div>
+                    <div class="form-grid cols-2">
+                        <div class="form-group">
+                            <label for="inno-savings">Est. Yearly Carbon Savings (kg CO₂)</label>
+                            <input type="number" id="inno-savings" placeholder="e.g. 75" min="0" step="0.1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inno-status">Current Status</label>
+                            <select id="inno-status" required>
+                                <option value="Planned">Planned</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Implemented" selected>Implemented</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inno-desc">Short Description</label>
+                        <textarea id="inno-desc" rows="3" placeholder="Explain the changes made, resources saved, and details of the operation." required></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('innovation-modal').classList.remove('active')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Innovation</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Target Modal -->
+    <div class="modal-overlay" id="target-modal">
+        <div class="modal-box glass-panel">
+            <div class="modal-header">
+                <h2>Define Eco Target</h2>
+                <button class="modal-close" onclick="document.getElementById('target-modal').classList.remove('active')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="create-target-form">
+                    <div class="form-group">
+                        <label for="target-metric">Conservation Goal Area</label>
+                        <select id="target-metric" required>
+                            <option value="Electricity">Reduce Electricity Consumption (kWh)</option>
+                            <option value="Water">Reduce Water Consumption (m³)</option>
+                            <option value="Plastic">Reduce Single-Use Plastics Usage (kg)</option>
+                            <option value="Waste">Reduce Total Waste Generated (kg)</option>
+                        </select>
+                    </div>
+                    <div class="form-grid cols-2">
+                        <div class="form-group">
+                            <label for="target-val">Target Metric Limit</label>
+                            <input type="number" id="target-val" placeholder="e.g. 280" min="0.1" step="0.1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="target-month">Target Month</label>
+                            <select id="target-month" required>
+                                <option value="May" selected>May 2026</option>
+                                <option value="June">June 2026</option>
+                                <option value="July">July 2026</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('target-modal').classList.remove('active')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Target</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Educational Lesson Detail Modal -->
+    <div class="modal-overlay" id="lesson-modal">
+        <div class="modal-box glass-panel max-width-large">
+            <div class="modal-header">
+                <h2 id="lesson-modal-title">Academy Guide Detail</h2>
+                <button class="modal-close" onclick="document.getElementById('lesson-modal').classList.remove('active')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="lesson-modal-body">
+                <!-- Dynamic body content loaded on request -->
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-primary" onclick="document.getElementById('lesson-modal').classList.remove('active')">Close Guide</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Printable Report Overlay - invisible except during window.print() -->
+    <div class="print-report-container" id="print-report-container">
+        <!-- Rendered in JS dynamically for PDF prints -->
+    </div>
+
+    <!-- Core Javascript Files -->
+    <script src="js/app.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/innovation.js"></script>
+    <script src="js/recommendations.js"></script>
+    <script src="js/targets.js"></script>
+    <script src="js/benchmarking.js"></script>
+    <script src="js/education.js"></script>
+    <script src="js/reports.js"></script>
+</body>
+</html>
